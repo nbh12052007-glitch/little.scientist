@@ -1,0 +1,1026 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little Scientist - Nhà khoa học nhí</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue:#168ed5;
+  --dark:#17436b;
+  --cyan:#65d4e9;
+  --green:#68cda8;
+  --yellow:#ffdc79;
+  --bg:#f1f8ff;
+  --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Nunito,sans-serif;background:var(--bg);color:var(--dark)}
+button{font-family:inherit;cursor:pointer}
+header{
+  height:76px;background:white;display:flex;align-items:center;
+  justify-content:space-between;padding:0 5%;
+  position:sticky;top:0;z-index:30;
+  box-shadow:0 4px 20px #a6c9df40;
+}
+.logo{font-size:23px;font-weight:900;color:var(--blue)}
+.logo span{color:#55c5b4}
+nav{display:flex;gap:7px;align-items:center}
+nav button{
+  border:0;background:transparent;color:#56748e;
+  font-size:13px;font-weight:900;padding:11px 13px;border-radius:12px;
+}
+nav button:hover,nav button.active{background:#e4f4ff;color:var(--blue)}
+main{min-height:80vh}
+.page{display:none;animation:appear .4s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.container{width:min(1150px,90%);margin:auto}
+.section-head{text-align:center;margin:45px 0 30px}
+.section-head small{color:var(--blue);font-weight:900;letter-spacing:2px}
+.section-head h2{font-size:34px;margin:8px 0}
+.section-head p{color:#718ba2}
+.btn{
+  border:0;border-radius:14px;padding:13px 22px;
+  background:var(--blue);color:white;font-weight:900;
+  box-shadow:0 5px 0 #0873b4;transition:.2s;
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 #0873b4}
+.btn.yellow{background:var(--yellow);color:#654a13;box-shadow:0 5px 0 #d9a93d}
+.btn.light{background:#e4f4ff;color:#147fc0;box-shadow:none}
+.card{
+  background:white;border-radius:24px;padding:24px;
+  box-shadow:0 8px 25px #91b9d51c;
+  border:1px solid #e9f3fa;
+}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+
+/* WATI */
+.wati-wrap{
+  width:160px;height:220px;position:relative;
+  margin:auto;animation:bob 3s ease-in-out infinite;
+  filter:drop-shadow(0 14px 12px #155d8c35);
+}
+@keyframes bob{50%{transform:translateY(-13px) rotate(2deg)}}
+.wati-body{
+  position:absolute;left:15px;top:0;width:130px;height:155px;
+  border-radius:55% 55% 48% 48%/65% 65% 40% 40%;
+  background:linear-gradient(140deg,#e4ffff,#75e0f3 48%,#138bd2);
+  border:3px solid #fff;
+  box-shadow:inset -12px -12px 18px #0075b855,inset 8px 8px 14px #fff;
+}
+.wati-body:before{
+  content:"";position:absolute;left:23px;top:20px;
+  width:30px;height:9px;background:#ffffffa8;border-radius:50%;
+  transform:rotate(-35deg);
+}
+.wati-eyes{position:absolute;top:57px;left:27px;display:flex;gap:23px}
+.wati-eye{width:26px;height:31px;border-radius:50%;background:white;position:relative}
+.wati-eye:after{
+  content:"";position:absolute;left:9px;top:8px;width:12px;height:17px;
+  border-radius:50%;background:#17436b;
+}
+.wati-eye:before{
+  content:"";position:absolute;left:14px;top:9px;width:5px;height:5px;
+  background:white;border-radius:50%;z-index:2;
+}
+.wati-glasses{
+  position:absolute;top:54px;left:21px;width:91px;height:39px;
+  border:4px solid #145b91;border-radius:14px;z-index:2;
+}
+.wati-glasses:after{
+  content:"";position:absolute;left:37px;top:12px;width:12px;height:4px;background:#145b91;
+}
+.wati-mouth{
+  position:absolute;left:55px;top:104px;width:22px;height:12px;
+  border-bottom:4px solid #17436b;border-radius:50%;
+}
+.wati-cheek{position:absolute;top:101px;width:14px;height:8px;background:#ff9da9;border-radius:50%}
+.wati-cheek.l{left:12px}.wati-cheek.r{right:12px}
+.wati-coat{
+  position:absolute;top:132px;left:8px;width:144px;height:75px;
+  background:linear-gradient(110deg,#fff,#dceeff);
+  border:3px solid #b9e8fa;border-radius:20px 20px 14px 14px;
+}
+.wati-coat:before{
+  content:"";position:absolute;left:60px;top:0;
+  border-left:12px solid transparent;border-right:12px solid transparent;
+  border-top:24px solid #64b9e6;
+}
+.wati-label{position:absolute;top:38px;left:37px;font-size:8px;color:#168bd5;font-weight:900}
+.wati-arm{position:absolute;top:145px;width:22px;height:57px;background:#56c9e9;border:3px solid white;border-radius:20px}
+.wati-arm.l{left:0;transform:rotate(25deg)}
+.wati-arm.r{right:0;transform:rotate(-25deg)}
+.wati-hand{position:absolute;right:-13px;top:124px;font-size:27px}
+.wati-legs{position:absolute;bottom:0;left:53px;display:flex;gap:26px}
+.wati-leg{width:15px;height:24px;border-radius:12px;background:#168bd5}
+.wati-shoe{position:absolute;bottom:-5px;width:29px;height:14px;border-radius:15px;background:white;border:3px solid #168bd5}
+.wati-shoe.a{left:43px}.wati-shoe.b{left:85px}
+
+/* HOME */
+.hero{
+  min-height:540px;position:relative;overflow:hidden;
+  background:linear-gradient(#69c8f0,#b8eafa 68%,#d9f6e9);
+}
+#home3d{position:absolute;inset:0;width:100%;height:100%}
+.hero-inner{
+  position:relative;z-index:2;width:min(1150px,90%);
+  margin:auto;min-height:540px;display:flex;align-items:center;
+}
+.hero-copy{max-width:570px}
+.pill{
+  display:inline-block;padding:9px 17px;border-radius:30px;
+  background:#ffffffb8;color:#168bd5;font-weight:900;margin-bottom:18px;
+}
+.hero h1{font-size:clamp(38px,5vw,62px);line-height:1.12;color:#174d78}
+.hero h1 span{color:#078fd5}
+.hero p{font-size:17px;line-height:1.8;color:#315e7b;margin-top:17px}
+.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:25px}
+.hero-mascot{position:absolute;right:9%;bottom:38px;z-index:3}
+.home-intro{padding:65px 0}
+.intro-row{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px}
+.intro-art{
+  min-height:280px;border-radius:30px;
+  background:linear-gradient(145deg,#c4edff,#e0f9eb);
+  display:grid;place-items:center;font-size:100px;
+}
+.intro-copy h2{font-size:30px;margin-bottom:15px}
+.intro-copy p{line-height:1.9;color:#69849b;margin-bottom:12px}
+.home-links{padding:55px 0;background:#e8f6ff}
+.home-link{
+  text-align:center;padding:27px 18px;
+  transition:.25s;cursor:pointer;
+}
+.home-link:hover{transform:translateY(-8px)}
+.home-link .symbol{font-size:48px;margin-bottom:12px}
+.home-link h3{margin-bottom:8px}
+.home-link p{font-size:14px;color:#718ba2;line-height:1.6}
+
+/* LIBRARY */
+.lesson-card{overflow:hidden;padding:0;transition:.25s}
+.lesson-card:hover{transform:translateY(-7px)}
+.lesson-art{height:165px;display:grid;place-items:center;font-size:75px}
+.lesson-art.one{background:linear-gradient(135deg,#b5e9ff,#e5faff)}
+.lesson-art.two{background:linear-gradient(135deg,#c9d6ff,#eeeaff)}
+.lesson-art.three{background:linear-gradient(135deg,#b8f0d8,#e4fff1)}
+.lesson-content{padding:22px}
+.lesson-content small{font-weight:900;color:var(--blue)}
+.lesson-content h3{font-size:19px;margin:9px 0}
+.lesson-content p{color:#718ba2;line-height:1.7;min-height:68px}
+.lesson-content button{margin-top:15px}
+.lesson-detail{line-height:1.9;color:#476780}
+.lesson-detail h3{color:#168bd5;margin:18px 0 5px}
+.lesson-detail ul{padding-left:22px}
+
+/* LAB */
+.lab-shell{
+  background:linear-gradient(140deg,#173e69,#126f9f);
+  border-radius:28px;padding:20px;color:white;
+}
+#lab3d{width:100%;height:430px;display:block;border-radius:20px;background:linear-gradient(#86d8f4,#d9f6ff)}
+.lab-controls{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.lab-controls button{border:0;border-radius:12px;padding:12px 17px;font-weight:900;background:#fff;color:#176b9c}
+.lab-controls button.selected{background:#ffda72;color:#66460b}
+#labInfo{margin-top:16px;line-height:1.8}
+
+/* EXPERIMENTS */
+.experiment-icon{font-size:55px;margin-bottom:15px}
+.experiment-card h3{margin-bottom:10px}
+.experiment-card p{color:#718ba2;line-height:1.7}
+.experiment-result{
+  background:#eaf7ff;padding:15px;border-radius:14px;
+  margin-top:15px;line-height:1.8;display:none;
+}
+select{
+  padding:12px;border:2px solid #d6eaf7;
+  border-radius:12px;font-family:inherit;font-weight:800;
+  margin:10px 0;width:100%;
+}
+
+/* GAMES */
+.question{font-size:20px;font-weight:900;margin:15px 0}
+.answer{
+  display:block;width:100%;padding:14px;text-align:left;
+  border:2px solid #dcecf7;border-radius:13px;
+  background:#f7fbff;margin:9px 0;font-weight:800;color:#315a78;
+}
+.answer:hover{border-color:#168ed5;background:#eaf7ff}
+.feedback{font-weight:900;margin-top:15px;min-height:25px}
+.sort-item{
+  display:inline-block;background:#e2f4ff;padding:12px 16px;
+  margin:7px;border-radius:12px;font-weight:900;cursor:pointer;
+}
+.sort-item.chosen{background:#ffdf88}
+#sortResult{margin-top:15px;font-weight:900}
+
+/* ACHIEVEMENTS */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stat{text-align:center;padding:25px}
+.stat strong{font-size:35px;color:#168ed5;display:block}
+.stat span{color:#718ba2;font-weight:800}
+.progress-track{height:15px;background:#e2eff8;border-radius:30px;overflow:hidden;margin:18px 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,#53c9b1,#168ed5);width:0%;transition:.5s}
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.badge-card{text-align:center;padding:20px;opacity:.35}
+.badge-card.earned{opacity:1;background:#fff8df}
+.badge-card .medal{font-size:43px}
+.badge-card h4{margin:8px 0}
+footer{text-align:center;padding:35px;background:#17436b;color:white;line-height:2;margin-top:50px}
+
+/* MODAL */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:60;
+  background:#0c2d4dcc;align-items:center;justify-content:center;padding:20px;
+}
+.modal{
+  background:white;width:min(700px,100%);max-height:85vh;
+  overflow:auto;border-radius:25px;padding:32px;position:relative;
+}
+.modal h2{color:#168ed5;margin-bottom:15px}
+.modal p,.modal li{line-height:1.8;margin:10px 0}
+.modal ul{padding-left:22px}
+.modal-close{
+  position:absolute;right:17px;top:15px;border:0;
+  border-radius:50%;width:35px;height:35px;font-size:22px;background:#eaf6ff;
+}
+@media(max-width:850px){
+  header{height:auto;flex-direction:column;padding:12px;gap:8px}
+  nav{flex-wrap:wrap;justify-content:center}
+  nav button{font-size:11px;padding:9px}
+  .hero-mascot{right:2%;transform:scale(.75);transform-origin:bottom right}
+  .hero-copy{max-width:75%}
+  .grid3,.stat-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .hero-inner{min-height:620px;align-items:flex-start;padding-top:65px}
+  .hero-copy{max-width:100%}
+  .hero-mascot{right:5%;bottom:0;transform:scale(.7);transform-origin:bottom right}
+  .intro-row,.grid2,.grid3,.stat-grid{grid-template-columns:1fr}
+  .badge-grid{grid-template-columns:1fr 1fr}
+  .section-head h2{font-size:27px}
+  #lab3d{height:300px}
+}
+
+/* LOGIN, AUDIO, IMAGE LIBRARY */
+body.logged-out header,body.logged-out main,body.logged-out footer{visibility:hidden}
+.login-screen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 15% 15%,#dff8ff,transparent 35%),linear-gradient(135deg,#65c9ef,#d9f8ed)}
+.login-card{width:min(460px,100%);background:#fff;border-radius:30px;padding:30px;box-shadow:0 25px 70px #14527b35;text-align:center}
+.login-card h1{color:#168ed5;font-size:30px;margin:8px 0}
+.login-card p{color:#6c879b;line-height:1.6}
+.login-mascot{font-size:66px;margin-bottom:5px}
+.login-card label{display:block;text-align:left;font-weight:900;margin:15px 0 6px;color:#315a78}
+.login-card input,.login-card select{width:100%;padding:13px 14px;border:2px solid #dcecf7;border-radius:13px;font:inherit;outline:none}
+.login-card input:focus,.login-card select:focus{border-color:#168ed5}
+.login-error{min-height:24px;color:#d45b54;font-weight:800;margin:10px 0}
+.header-tools{display:flex;align-items:center;gap:9px}
+.sound-toggle,.user-chip{border:0;border-radius:12px;padding:10px 13px;background:#e8f6ff;color:#176b9c;font-weight:900}
+.user-chip{background:#e8f8ef;color:#287c5d}
+.gallery-title{margin:24px 0 12px;color:#168bd5}
+.lesson-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:12px 0 20px}
+.gallery-item{overflow:hidden;border-radius:16px;background:#f0f8fd;border:1px solid #e0eef7}
+.gallery-item img{width:100%;height:155px;object-fit:cover;display:block;background:#dff3fb}
+.gallery-item p{padding:9px 11px;font-weight:800;font-size:13px;color:#42647d}
+.lesson-detail .gallery-item p{margin:0}
+.lab-controls button{transition:.2s}
+.lab-controls button:hover{transform:translateY(-2px)}
+.lab-tip{font-size:13px;color:#d8f2ff;margin-top:8px}
+.speak-btn{border:0;border-radius:12px;background:#e7f7ff;color:#147fc0;padding:10px 14px;font-weight:900;margin:10px 0}
+@media(max-width:850px){.header-tools{padding-bottom:5px}.lesson-gallery{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.lesson-gallery{grid-template-columns:1fr}.gallery-item img{height:190px}.login-card{padding:23px}}
+
+</style>
+</head>
+
+<body class="logged-out">
+
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-mascot">💧🔬</div>
+    <div style="font-weight:900;color:#55bda9;letter-spacing:2px">LITTLE SCIENTIST</div>
+    <h1>Chào mừng nhà khoa học nhí!</h1>
+    <p>Đăng nhập để bắt đầu hành trình khám phá thế giới của nước cùng Wati.</p>
+    <form id="loginForm">
+      <label for="loginRole">Em đăng nhập với vai trò</label>
+      <select id="loginRole">
+        <option value="student">Học sinh</option>
+        <option value="teacher">Giáo viên</option>
+      </select>
+      <label for="loginName">Tên đăng nhập</label>
+      <input id="loginName" autocomplete="username" placeholder="Nhập tên của em" required>
+      <label for="loginPin">Mã PIN</label>
+      <input id="loginPin" type="password" inputmode="numeric" maxlength="4" placeholder="Nhập mã PIN" required>
+      <div class="login-error" id="loginError"></div>
+      <button class="btn" type="submit" style="width:100%">Bắt đầu khám phá →</button>
+    </form>
+    <p style="font-size:12px;margin-top:14px">Bản học tập minh họa: học sinh dùng PIN 123, giáo viên dùng PIN 1234.</p>
+  </div>
+</div>
+
+<header>
+  <div class="logo">💧 Little <span>Scientist</span></div>
+  <nav>
+    <button class="active" data-page="home">Trang chủ</button>
+    <button data-page="library">Thư viện</button>
+    <button data-page="lab">Phòng 3D</button>
+    <button data-page="experiments">Thí nghiệm</button>
+    <button data-page="games">Trò chơi</button>
+    <button data-page="achievements">Thành tích</button>
+  </nav>
+  <div class="header-tools">
+    <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊 Âm thanh: bật</button>
+    <button class="user-chip" id="userChip" onclick="logout()">👤 Đăng xuất</button>
+  </div>
+</header>
+
+<main>
+
+<!-- 1. TRANG CHỦ -->
+<div class="page active" id="home">
+  <section class="hero">
+    <canvas id="home3d"></canvas>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="pill">🔬 KHOA HỌC LỚP 4</div>
+        <h1>Khám phá thế giới <span>kỳ diệu</span> của nước!</h1>
+        <p>
+          Xin chào! Tớ là Wati – người bạn đồng hành của em.
+          Hãy cùng tớ bước vào hành trình khám phá khoa học,
+          quan sát những hiện tượng thú vị và tìm hiểu về nước nhé!
+        </p>
+        <div class="hero-actions">
+          <button class="btn yellow" onclick="showPage('library')">Bắt đầu học →</button>
+          <button class="btn" onclick="showPage('lab')">Khám phá 3D</button>
+          <button class="btn light" onclick="speakText('Xin chào! Tớ là Wati. Cùng khám phá khoa học lớp 4 nhé!')">🔈 Nghe Wati chào</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero-mascot">
+      <div class="wati-wrap">
+        <div class="wati-body">
+          <div class="wati-eyes"><div class="wati-eye"></div><div class="wati-eye"></div></div>
+          <div class="wati-glasses"></div>
+          <div class="wati-cheek l"></div><div class="wati-cheek r"></div>
+          <div class="wati-mouth"></div>
+        </div>
+        <div class="wati-arm l"></div><div class="wati-arm r"></div>
+        <div class="wati-hand">👍</div>
+        <div class="wati-coat"><div class="wati-label">LITTLE SCIENTIST</div></div>
+        <div class="wati-legs"><div class="wati-leg"></div><div class="wati-leg"></div></div>
+        <div class="wati-shoe a"></div><div class="wati-shoe b"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-intro">
+    <div class="container intro-row">
+      <div class="intro-art">🌊☀️☁️</div>
+      <div class="intro-copy">
+        <div style="color:#168ed5;font-weight:900">CHÀO MỪNG ĐẾN VỚI</div>
+        <h2>Thế giới khoa học của Wati</h2>
+        <p>Nước có mặt ở khắp nơi trong cuộc sống. Nhưng em đã biết nước có những tính chất gì, vì sao nước có thể biến đổi và làm thế nào để bảo vệ nguồn nước chưa?</p>
+        <p>Little Scientist giúp em khám phá kiến thức qua hình ảnh trực quan, mô phỏng 3D và những hoạt động tương tác thú vị.</p>
+        <button class="btn" onclick="showPage('library')">Tìm hiểu các bài học →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-links">
+    <div class="container">
+      <div class="section-head">
+        <small>KHÁM PHÁ LITTLE SCIENTIST</small>
+        <h2>Sáu khu vực học tập</h2>
+        <p>Mỗi khu vực là một trải nghiệm khoa học mới!</p>
+      </div>
+      <div class="grid3">
+        <div class="card home-link" onclick="showPage('library')"><div class="symbol">📚</div><h3>Thư viện khoa học</h3><p>Đọc bài học và khám phá kiến thức.</p></div>
+        <div class="card home-link" onclick="showPage('lab')"><div class="symbol">🌍</div><h3>Phòng thí nghiệm 3D</h3><p>Quan sát các hiện tượng của nước.</p></div>
+        <div class="card home-link" onclick="showPage('experiments')"><div class="symbol">🧪</div><h3>Thí nghiệm vui</h3><p>Khám phá và dự đoán kết quả.</p></div>
+        <div class="card home-link" onclick="showPage('games')"><div class="symbol">🧩</div><h3>Trò chơi khoa học</h3><p>Học qua các thử thách tương tác.</p></div>
+        <div class="card home-link" onclick="showPage('achievements')"><div class="symbol">🏆</div><h3>Thành tích</h3><p>Theo dõi điểm số và tiến độ học tập.</p></div>
+        <div class="card home-link" onclick="showPage('library')"><div class="symbol">💧</div><h3>Hành trình về nước</h3><p>Bắt đầu với ba bài học khoa học.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 2. THƯ VIỆN -->
+<div class="page" id="library">
+  <div class="container">
+    <div class="section-head">
+      <small>KNOWLEDGE LIBRARY</small>
+      <h2>📚 Thư viện khoa học</h2>
+      <p>Khám phá kiến thức thuộc Chủ đề 1 – Khoa học lớp 4</p>
+    </div>
+    <div class="grid3">
+      <div class="card lesson-card">
+        <div class="lesson-art one">💧</div>
+        <div class="lesson-content">
+          <small>BÀI HỌC 01</small>
+          <h3>Tính chất của nước và nước với cuộc sống</h3>
+          <p>Tìm hiểu các thể, tính chất và vai trò của nước.</p>
+          <button class="btn" onclick="openLesson(1)">Đọc bài học</button>
+        </div>
+      </div>
+      <div class="card lesson-card">
+        <div class="lesson-art two">🌧️</div>
+        <div class="lesson-content">
+          <small>BÀI HỌC 02</small>
+          <h3>Sự chuyển thể và vòng tuần hoàn của nước</h3>
+          <p>Khám phá bốn sự chuyển thể và vòng tuần hoàn nước.</p>
+          <button class="btn" onclick="openLesson(2)">Đọc bài học</button>
+        </div>
+      </div>
+      <div class="card lesson-card">
+        <div class="lesson-art three">🌱</div>
+        <div class="lesson-content">
+          <small>BÀI HỌC 03</small>
+          <h3>Ô nhiễm và bảo vệ nguồn nước</h3>
+          <p>Tìm hiểu nguyên nhân ô nhiễm và cách bảo vệ nước.</p>
+          <button class="btn" onclick="openLesson(3)">Đọc bài học</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. PHÒNG THÍ NGHIỆM 3D -->
+<div class="page" id="lab">
+  <div class="container">
+    <div class="section-head">
+      <small>INTERACTIVE 3D LAB</small>
+      <h2>🌍 Phòng thí nghiệm 3D</h2>
+      <p>Quan sát mô phỏng 3D chuyển động của nước và các hiện tượng chuyển thể.</p>
+      <button class="speak-btn" onclick="speakText(document.getElementById('labInfo').textContent)">🔈 Nghe Wati giải thích</button>
+    </div>
+    <div class="lab-shell">
+      <canvas id="lab3d"></canvas>
+      <div class="lab-controls">
+        <button class="selected" onclick="setLab('cycle',this)">🌦️ Vòng tuần hoàn</button>
+        <button onclick="setLab('evaporation',this)">☀️ Bay hơi</button>
+        <button onclick="setLab('condensation',this)">☁️ Ngưng tụ</button>
+        <button onclick="setLab('rain',this)">🌧️ Mưa</button>
+        <button onclick="setLab('melting',this)">🧊 Nóng chảy</button>
+        <button onclick="setLab('freezing',this)">❄️ Đông đặc</button>
+      </div>
+      <div id="labInfo">Nước nhận nhiệt từ Mặt Trời và bay hơi. Hơi nước lên cao, ngưng tụ tạo thành mây và có thể rơi xuống thành mưa.</div>
+      <div class="lab-tip">💡 Chọn một hiện tượng để quan sát. Đây là mô phỏng khoa học 3D, không phải thí nghiệm đo đạc thực tế.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. THÍ NGHIỆM -->
+<div class="page" id="experiments">
+  <div class="container">
+    <div class="section-head">
+      <small>FUN EXPERIMENTS</small>
+      <h2>🧪 Thí nghiệm vui</h2>
+      <p>Quan sát mô phỏng, dự đoán và tìm hiểu lời giải thích.</p>
+    </div>
+    <div class="grid2">
+      <div class="card experiment-card">
+        <div class="experiment-icon">🧊</div>
+        <h3>Thí nghiệm 1: Nước đá tan chảy</h3>
+        <p>Điều gì xảy ra khi nước đá nhận nhiệt từ môi trường?</p>
+        <button class="btn" onclick="experiment('ice')">Khám phá</button>
+        <div class="experiment-result" id="result-ice"></div>
+      </div>
+      <div class="card experiment-card">
+        <div class="experiment-icon">💨</div>
+        <h3>Thí nghiệm 2: Nước bay hơi</h3>
+        <p>Vì sao nước ở vũng nước có thể dần biến mất khi trời nắng?</p>
+        <button class="btn" onclick="experiment('evap')">Khám phá</button>
+        <div class="experiment-result" id="result-evap"></div>
+      </div>
+      <div class="card experiment-card">
+        <div class="experiment-icon">🥛</div>
+        <h3>Thí nghiệm 3: Hơi nước ngưng tụ</h3>
+        <p>Vì sao bên ngoài một chiếc cốc lạnh có thể xuất hiện giọt nước?</p>
+        <button class="btn" onclick="experiment('condense')">Khám phá</button>
+        <div class="experiment-result" id="result-condense"></div>
+      </div>
+      <div class="card experiment-card">
+        <div class="experiment-icon">🧂</div>
+        <h3>Thí nghiệm 4: Chất nào tan trong nước?</h3>
+        <p>Khám phá khả năng hòa tan một số chất của nước.</p>
+        <button class="btn" onclick="experiment('dissolve')">Khám phá</button>
+        <div class="experiment-result" id="result-dissolve"></div>
+      </div>
+    </div>
+    <p style="margin-top:25px;color:#718ba2;line-height:1.8">Lưu ý: Đây là các hoạt động mô phỏng học tập. Không tự thực hiện thí nghiệm với nước nóng hoặc dụng cụ nguy hiểm khi không có người lớn hướng dẫn.</p>
+  </div>
+</div>
+
+<!-- 5. TRÒ CHƠI -->
+<div class="page" id="games">
+  <div class="container">
+    <div class="section-head">
+      <small>SCIENCE GAMES</small>
+      <h2>🧩 Trò chơi khoa học</h2>
+      <p>Thử sức với những câu hỏi và hoạt động tương tác.</p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>🧠 Trắc nghiệm cùng Wati</h3>
+        <p style="color:#718ba2;margin:8px 0">Chọn đáp án đúng cho mỗi câu hỏi.</p>
+        <div id="quizArea"></div>
+        <button class="btn" onclick="startQuiz()">Bắt đầu trò chơi</button>
+      </div>
+      <div class="card">
+        <h3>🔄 Sắp xếp vòng tuần hoàn nước</h3>
+        <p style="color:#718ba2;margin:8px 0">Chọn các bước theo đúng thứ tự diễn ra trong vòng tuần hoàn nước.</p>
+        <div id="sortChoices">
+          <button class="sort-item" onclick="chooseSort(0)">Ngưng tụ</button>
+          <button class="sort-item" onclick="chooseSort(1)">Mưa</button>
+          <button class="sort-item" onclick="chooseSort(2)">Bay hơi</button>
+        </div>
+        <p id="sortSelected" style="margin-top:12px">Thứ tự em chọn: chưa có</p>
+        <button class="btn" onclick="checkSort()">Kiểm tra</button>
+        <button class="btn light" onclick="resetSort()">Làm lại</button>
+        <div id="sortResult"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. THÀNH TÍCH -->
+<div class="page" id="achievements">
+  <div class="container">
+    <div class="section-head">
+      <small>MY LEARNING JOURNEY</small>
+      <h2>🏆 Thành tích của em</h2>
+      <p>Mỗi bài học hoàn thành là một bước tiến trên hành trình khoa học!</p>
+    </div>
+    <div class="stat-grid">
+      <div class="card stat"><strong id="scoreStat">0</strong><span>Điểm tích lũy</span></div>
+      <div class="card stat"><strong id="lessonStat">0/3</strong><span>Bài học hoàn thành</span></div>
+      <div class="card stat"><strong id="badgeStat">0</strong><span>Huy hiệu đạt được</span></div>
+    </div>
+    <div class="card" style="margin:25px 0">
+      <h3>📈 Tiến độ học tập</h3>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <p id="progressText">Em đã hoàn thành 0% hành trình học tập.</p>
+    </div>
+    <h3 style="margin:30px 0 18px">🎖️ Bộ sưu tập huy hiệu</h3>
+    <div class="badge-grid">
+      <div class="card badge-card" id="badge1"><div class="medal">💧</div><h4>Nhà khám phá nước</h4><p>Hoàn thành bài 1</p></div>
+      <div class="card badge-card" id="badge2"><div class="medal">☁️</div><h4>Chuyên gia thời tiết</h4><p>Hoàn thành bài 2</p></div>
+      <div class="card badge-card" id="badge3"><div class="medal">🌱</div><h4>Người bảo vệ nước</h4><p>Hoàn thành bài 3</p></div>
+      <div class="card badge-card" id="badge4"><div class="medal">⭐</div><h4>Ngôi sao khoa học</h4><p>Đạt 30 điểm</p></div>
+      <div class="card badge-card" id="badge5"><div class="medal">🏆</div><h4>Nhà khoa học tài ba</h4><p>Đạt 60 điểm</p></div>
+      <div class="card badge-card" id="badge6"><div class="medal">🔬</div><h4>Bậc thầy khám phá</h4><p>Hoàn thành cả 3 bài</p></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <strong>💧 LITTLE SCIENTIST</strong>
+  <p>Khơi nguồn tò mò – Nuôi dưỡng đam mê khoa học</p>
+  <p>Website học tập Khoa học lớp 4 | Chủ đề 1</p>
+</footer>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* ÂM THANH TƯƠNG TÁC */
+let soundEnabled=true,audioContext=null;
+function playSound(kind="tap"){
+  if(!soundEnabled)return;
+  try{
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(),gain=audioContext.createGain(),now=audioContext.currentTime;
+    const tones=kind==="success"?[660,880]:kind==="wrong"?[220,180]:[520];
+    osc.connect(gain);gain.connect(audioContext.destination);
+    osc.frequency.setValueAtTime(tones[0],now);
+    if(tones.length>1)osc.frequency.setValueAtTime(tones[1],now+.12);
+    osc.type="sine";gain.gain.setValueAtTime(.0001,now);
+    gain.gain.exponentialRampToValueAtTime(.12,now+.025);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+.28);
+    osc.start(now);osc.stop(now+.3);
+  }catch(e){}
+}
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  document.getElementById("soundToggle").textContent=soundEnabled?"🔊 Âm thanh: bật":"🔇 Âm thanh: tắt";
+  if(soundEnabled)playSound("success");
+}
+function speakText(text){
+  if(!("speechSynthesis" in window)){alert("Trình duyệt chưa hỗ trợ đọc văn bản.");return;}
+  speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang="vi-VN";utterance.rate=.92;utterance.pitch=1.08;
+  speechSynthesis.speak(utterance);
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("button")&&!e.target.closest("#soundToggle"))playSound("tap");
+});
+
+/* NAVIGATION */
+function showPage(id){
+  playSound("tap");
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===id);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(id==="lab") setTimeout(resizeLab,100);
+  if(id==="achievements") updateAchievements();
+}
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>showPage(b.dataset.page));
+});
+
+/* TÀI KHOẢN VÀ TIẾN ĐỘ RIÊNG */
+let currentUser=null;
+let state={lessons:[],score:0};
+function accountStorageKey(){
+  return currentUser ? `watiProgress_${currentUser.role}_${currentUser.name.toLowerCase()}` : "watiProgress_guest";
+}
+function loadAccountState(){
+  const saved=localStorage.getItem(accountStorageKey());
+  state=saved ? JSON.parse(saved) : {lessons:[],score:0};
+  state.lessons=state.lessons||[];state.score=state.score||0;
+  updateAchievements();
+}
+function saveState(){
+  localStorage.setItem(accountStorageKey(),JSON.stringify(state));
+  updateAchievements();
+}
+function award(points){state.score+=points;saveState();}
+document.getElementById("loginForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const role=document.getElementById("loginRole").value;
+  const name=document.getElementById("loginName").value.trim();
+  const pin=document.getElementById("loginPin").value.trim();
+  const expected=role==="student"?"123":"1234";
+  if(!name){document.getElementById("loginError").textContent="Em hãy nhập tên đăng nhập nhé.";return;}
+  if(pin!==expected){document.getElementById("loginError").textContent="Mã PIN chưa đúng. Em kiểm tra lại nhé!";playSound("wrong");return;}
+  currentUser={role,name};
+  document.getElementById("loginScreen").style.display="none";
+  document.body.classList.remove("logged-out");
+  document.getElementById("userChip").textContent=(role==="teacher"?"👩‍🏫 ":"🧑‍🔬 ")+name+" · Đăng xuất";
+  loadAccountState();playSound("success");
+});
+function logout(){
+  if(!confirm("Em muốn đăng xuất khỏi Little Scientist?"))return;
+  currentUser=null;document.body.classList.add("logged-out");
+  document.getElementById("loginScreen").style.display="flex";
+  document.getElementById("loginPin").value="";
+  document.getElementById("loginName").value="";
+  document.getElementById("loginError").textContent="";
+}
+
+/* LESSONS */
+const lessonData={
+1:{
+ title:"Tính chất của nước và nước với cuộc sống",
+ body:`
+ <h3>1. Các thể của nước</h3>
+ <p>Nước tồn tại ở ba thể: thể rắn, thể lỏng và thể khí.</p>
+ <ul><li><b>Thể rắn:</b> Nước đá, băng tuyết.</li>
+ <li><b>Thể lỏng:</b> Nước trong ao, hồ, sông, suối.</li>
+ <li><b>Thể khí:</b> Hơi nước có trong không khí.</li></ul>
+ <h3>2. Một số tính chất của nước</h3>
+ <ul><li>Nước tinh khiết không màu, không mùi, không vị.</li>
+ <li>Nước không có hình dạng nhất định.</li>
+ <li>Nước chảy từ cao xuống thấp và lan ra mọi phía.</li>
+ <li>Nước thấm qua một số vật liệu và hòa tan một số chất.</li></ul>
+ <h3>3. Vai trò của nước</h3>
+ <p>Nước cần thiết cho con người, động vật, thực vật và nhiều hoạt động sản xuất.</p>`
+},
+2:{
+ title:"Sự chuyển thể và vòng tuần hoàn của nước",
+ body:`
+ <h3>1. Bốn hiện tượng chuyển thể</h3>
+ <ul><li><b>Nóng chảy:</b> Nước đá chuyển thành nước lỏng.</li>
+ <li><b>Đông đặc:</b> Nước lỏng chuyển thành nước đá.</li>
+ <li><b>Bay hơi:</b> Nước lỏng chuyển thành hơi nước.</li>
+ <li><b>Ngưng tụ:</b> Hơi nước chuyển thành những giọt nước nhỏ.</li></ul>
+ <h3>2. Vòng tuần hoàn của nước</h3>
+ <p>Nước ở sông, hồ và biển nhận nhiệt từ Mặt Trời rồi bay hơi. Hơi nước lên cao, gặp lạnh và ngưng tụ thành những giọt nước nhỏ tạo thành mây. Khi các giọt nước đủ lớn, chúng có thể rơi xuống thành mưa.</p>
+ <p>Nước mưa tiếp tục chảy về sông, hồ và biển. Quá trình này diễn ra liên tục trong tự nhiên.</p>`
+},
+3:{
+ title:"Ô nhiễm và bảo vệ nguồn nước",
+ body:`
+ <h3>1. Nguyên nhân gây ô nhiễm</h3>
+ <ul><li>Vứt rác xuống ao, hồ, sông, suối.</li>
+ <li>Xả nước thải chưa được xử lí.</li>
+ <li>Sử dụng hóa chất không đúng cách.</li></ul>
+ <h3>2. Vì sao cần bảo vệ nguồn nước?</h3>
+ <p>Nước sạch cần thiết cho sức khỏe con người, động vật, thực vật và các hoạt động sản xuất.</p>
+ <h3>3. Cách bảo vệ nguồn nước</h3>
+ <ul><li>Không vứt rác xuống nguồn nước.</li>
+ <li>Thu gom và xử lí nước thải đúng cách.</li>
+ <li>Sử dụng nước tiết kiệm, hợp lí.</li>
+ <li>Giữ gìn vệ sinh môi trường.</li></ul>`
+}
+};
+const lessonGallery={
+  1:[
+    ["https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=85","Nước ở sông, hồ và biển – thể lỏng"],
+    ["https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=900&q=85","Nước đá – thể rắn"],
+    ["https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=900&q=85","Nước cần thiết cho cây xanh"],
+    ["https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=900&q=85","Nước sạch trong đời sống"]
+  ],
+  2:[
+    ["https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=85","Mặt nước nhận nhiệt từ Mặt Trời"],
+    ["https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=900&q=85","Mây hình thành khi hơi nước ngưng tụ"],
+    ["https://images.unsplash.com/photo-1519692933481-e162a57d6721?auto=format&fit=crop&w=900&q=85","Nước mưa rơi xuống mặt đất"],
+    ["https://images.unsplash.com/photo-1439405326854-014607f694d7?auto=format&fit=crop&w=900&q=85","Nước chảy về sông, hồ"]
+  ],
+  3:[
+    ["https://images.unsplash.com/photo-1485236715568-ddc5ee6ca227?auto=format&fit=crop&w=900&q=85","Rác thải có thể làm ô nhiễm nguồn nước"],
+    ["https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=900&q=85","Giữ gìn môi trường nước sạch"],
+    ["https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=900&q=85","Bảo vệ cây xanh và môi trường"],
+    ["https://images.unsplash.com/photo-1523861751938-121b5323b48b?auto=format&fit=crop&w=900&q=85","Sử dụng nước tiết kiệm"]
+  ]
+};
+function galleryHTML(n){
+  return `<h3 class="gallery-title">🖼️ Thư viện hình ảnh bài ${n}</h3>
+    <div class="lesson-gallery">${lessonGallery[n].map(([url,caption])=>
+      `<div class="gallery-item"><img src="${url}" alt="${caption}" loading="lazy" onerror="this.style.display='none'"><p>${caption}</p></div>`
+    ).join("")}</div>`;
+}
+function openLesson(n){
+  const d=lessonData[n];
+  showModal(`<h2>📖 Bài ${n}: ${d.title}</h2><div class="lesson-detail">${d.body}</div>
+  ${galleryHTML(n)}
+  <button class="speak-btn" onclick="speakText(document.querySelector('#modalContent .lesson-detail').innerText)">🔈 Nghe nội dung bài học</button><br>
+  <button class="btn" onclick="completeLesson(${n})">Đánh dấu hoàn thành ✓</button>`);
+}
+function completeLesson(n){
+  playSound("success");
+ if(!state.lessons.includes(n)){
+  state.lessons.push(n);award(10);
+ }
+ showModal("<h2>🎉 Tuyệt vời!</h2><p>Em đã hoàn thành bài học. Wati tặng em 10 điểm và một ngôi sao!</p>⭐");
+ updateAchievements();
+}
+
+/* MODAL */
+function showModal(html){
+ document.getElementById("modalContent").innerHTML=html;
+ document.getElementById("modalBg").style.display="flex";
+}
+function closeModal(){document.getElementById("modalBg").style.display="none"}
+
+/* EXPERIMENTS */
+const experiments={
+ ice:"Nước đá nhận nhiệt từ môi trường và chuyển từ thể rắn sang thể lỏng. Hiện tượng này gọi là nóng chảy.",
+ evap:"Nước lỏng có thể chuyển thành hơi nước và hòa vào không khí. Quá trình này gọi là bay hơi.",
+ condense:"Hơi nước trong không khí gặp bề mặt lạnh có thể chuyển thành những giọt nước nhỏ. Đây là hiện tượng ngưng tụ.",
+ dissolve:"Một số chất như muối và đường có thể hòa tan trong nước. Một số chất khác như cát không tan trong nước."
+};
+function experiment(type){
+  playSound("success");
+ const el=document.getElementById("result-"+type);
+ el.style.display="block";
+ el.innerHTML="<b>🔍 Wati giải thích:</b><br>"+experiments[type];
+ award(2);
+}
+
+/* QUIZ */
+const questions=[
+ {q:"Nước đá thuộc thể nào?",a:["Thể lỏng","Thể rắn","Thể khí"],correct:1,ex:"Nước đá là nước ở thể rắn."},
+ {q:"Nước tinh khiết có đặc điểm nào?",a:["Có màu xanh","Không màu, không mùi, không vị","Có vị ngọt"],correct:1,ex:"Nước tinh khiết không màu, không mùi, không vị."},
+ {q:"Nước lỏng chuyển thành hơi nước gọi là gì?",a:["Bay hơi","Đông đặc","Nóng chảy"],correct:0,ex:"Bay hơi là quá trình nước lỏng chuyển thành hơi nước."},
+ {q:"Hơi nước gặp lạnh chuyển thành giọt nước là gì?",a:["Nóng chảy","Ngưng tụ","Đông đặc"],correct:1,ex:"Đó là hiện tượng ngưng tụ."},
+ {q:"Việc nào giúp bảo vệ nguồn nước?",a:["Vứt rác xuống sông","Xả nước thải chưa xử lí","Thu gom rác đúng nơi"],correct:2,ex:"Thu gom rác đúng nơi giúp hạn chế ô nhiễm nguồn nước."}
+];
+let qIndex=0,qScore=0;
+function startQuiz(){
+ qIndex=0;qScore=0;renderQuestion();
+}
+function renderQuestion(){
+ if(qIndex>=questions.length){
+  award(qScore);
+  showModal(`<h2>🏆 Hoàn thành trò chơi!</h2><p>Em trả lời đúng ${qScore/5} trên 5 câu.</p><p>Wati tặng em ${qScore} điểm!</p><button class="btn" onclick="startQuiz()">Chơi lại</button>`);
+  return;
+ }
+ const q=questions[qIndex];
+ document.getElementById("quizArea").innerHTML=`
+ <p style="color:#168ed5;font-weight:900">CÂU ${qIndex+1}/5</p>
+ <div class="question">${q.q}</div>
+ ${q.a.map((a,i)=>`<button class="answer" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${a}</button>`).join("")}
+ <div class="feedback" id="quizFeedback"></div>`;
+}
+function answerQuiz(i){
+ const q=questions[qIndex];
+ const fb=document.getElementById("quizFeedback");
+ if(i===q.correct){
+  fb.style.color="green";fb.textContent="🎉 Chính xác! "+q.ex;qScore+=5;
+ }else{
+  fb.style.color="#d58b29";fb.textContent="💡 Chưa đúng. "+q.ex;
+ }
+ document.querySelectorAll(".answer").forEach(b=>b.disabled=true);
+ const next=document.createElement("button");
+ next.className="btn";next.style.marginTop="15px";next.textContent="Câu tiếp theo →";
+ next.onclick=()=>{qIndex++;renderQuestion()};
+ document.getElementById("quizArea").appendChild(next);
+}
+
+/* SORT GAME */
+let sortSelected=[];
+const sortLabels=["Ngưng tụ","Mưa","Bay hơi"];
+function chooseSort(i){
+ if(sortSelected.includes(i))return;
+ sortSelected.push(i);
+ document.getElementById("sortSelected").textContent=
+ "Thứ tự em chọn: "+sortSelected.map(x=>sortLabels[x]).join(" → ");
+}
+function checkSort(){
+ const correct=[2,0,1];
+ const ok=sortSelected.length===3&&sortSelected.every((v,i)=>v===correct[i]);
+ document.getElementById("sortResult").textContent=ok?
+ "🎉 Chính xác! Bay hơi → Ngưng tụ → Mưa. Em nhận được 10 điểm!":
+ "💡 Chưa đúng rồi. Hãy thử sắp xếp lại nhé!";
+ if(ok&&!state.sortWon){state.sortWon=true;award(10)}
+}
+function resetSort(){
+ sortSelected=[];
+ document.getElementById("sortSelected").textContent="Thứ tự em chọn: chưa có";
+ document.getElementById("sortResult").textContent="";
+}
+
+/* ACHIEVEMENTS */
+function updateAchievements(){
+ const lessons=state.lessons.length;
+ const badges=[
+  state.lessons.includes(1),state.lessons.includes(2),
+  state.lessons.includes(3),state.score>=30,state.score>=60,lessons===3
+ ];
+ document.getElementById("scoreStat").textContent=state.score;
+ document.getElementById("lessonStat").textContent=lessons+"/3";
+ document.getElementById("badgeStat").textContent=badges.filter(Boolean).length;
+ document.getElementById("progressFill").style.width=(lessons/3*100)+"%";
+ document.getElementById("progressText").textContent=
+ "Em đã hoàn thành "+Math.round(lessons/3*100)+"% hành trình học tập.";
+ badges.forEach((v,i)=>document.getElementById("badge"+(i+1)).classList.toggle("earned",v));
+}
+
+/* PHÒNG THÍ NGHIỆM 3D – MÔ PHỎNG CÁC HIỆN TƯỢNG */
+let labScene,labCamera,labRenderer,labWater,labDrops=[],labClouds=[],labSun,labIce,labGround;
+let labMode="cycle",labClock=new THREE.Clock(),labReady=false;
+function makeCloud(x,y,z){
+  const group=new THREE.Group(),mat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:1});
+  [[0,0,0,1],[-.85,-.12,0,.72],[.82,-.1,0,.72],[0,.42,0,.78]].forEach(p=>{
+    const m=new THREE.Mesh(new THREE.SphereGeometry(p[3],24,18),mat);
+    m.position.set(p[0],p[1],p[2]);group.add(m);
+  });
+  group.position.set(x,y,z);labScene.add(group);labClouds.push(group);
+}
+function initLab(){
+  const canvas=document.getElementById("lab3d");if(labReady)return;labReady=true;
+  labScene=new THREE.Scene();labScene.background=new THREE.Color(0xa9e4f7);
+  labCamera=new THREE.PerspectiveCamera(43,canvas.clientWidth/canvas.clientHeight,.1,100);
+  labCamera.position.set(0,7,19);labCamera.lookAt(0,2,0);
+  labRenderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  labRenderer.setPixelRatio(Math.min(devicePixelRatio,2));labRenderer.setSize(canvas.clientWidth,canvas.clientHeight);
+  labRenderer.shadowMap.enabled=true;
+  labScene.add(new THREE.HemisphereLight(0xffffff,0x6a9aab,2.1));
+  const keyLight=new THREE.DirectionalLight(0xffffff,2.4);keyLight.position.set(-6,12,8);keyLight.castShadow=true;labScene.add(keyLight);
+  labSun=new THREE.Mesh(new THREE.SphereGeometry(1.35,40,32),new THREE.MeshBasicMaterial({color:0xffd45c}));
+  labSun.position.set(-7,7,-5);labScene.add(labSun);
+  const glow=new THREE.Mesh(new THREE.SphereGeometry(1.8,32,24),new THREE.MeshBasicMaterial({color:0xffe9a1,transparent:true,opacity:.22}));
+  glow.position.copy(labSun.position);labScene.add(glow);
+  for(let i=0;i<5;i++){
+    const hill=new THREE.Mesh(new THREE.SphereGeometry(5,32,20),new THREE.MeshStandardMaterial({color:i%2?0x83cda4:0x65b98f,roughness:1}));
+    hill.scale.set(1.4,.42,.35);hill.position.set(-12+i*6,-1.2,-8);labScene.add(hill);
+  }
+  labGround=new THREE.Mesh(new THREE.PlaneGeometry(40,24),new THREE.MeshStandardMaterial({color:0x8fd5a9,roughness:1}));
+  labGround.rotation.x=-Math.PI/2;labGround.position.set(0,-.65,-2);labScene.add(labGround);
+  labWater=new THREE.Mesh(new THREE.PlaneGeometry(24,9,50,30),new THREE.MeshStandardMaterial({color:0x24aee0,roughness:.22,metalness:.12,transparent:true,opacity:.94}));
+  labWater.rotation.x=-Math.PI/2;labWater.position.set(0,-.35,1);labScene.add(labWater);
+  makeCloud(1,6,-5);makeCloud(5,7,-7);makeCloud(-2,7.4,-8);
+  const dropMat=new THREE.MeshStandardMaterial({color:0x4ac9f2,roughness:.12,metalness:.08});
+  for(let i=0;i<95;i++){
+    const d=new THREE.Mesh(new THREE.SphereGeometry(.075+Math.random()*.045,14,12),dropMat);
+    d.position.set(-8+Math.random()*16,Math.random()*8,-2-Math.random()*6);labScene.add(d);labDrops.push(d);
+  }
+  labIce=new THREE.Mesh(new THREE.BoxGeometry(2.1,2.1,2.1),new THREE.MeshPhysicalMaterial({color:0xbcefff,transparent:true,opacity:.88,roughness:.08,metalness:.04}));
+  labIce.position.set(4,1,2);labIce.visible=false;labScene.add(labIce);
+  animateLab();
+}
+function animateLab(){
+  requestAnimationFrame(animateLab);if(!labRenderer)return;
+  const t=labClock.getElapsedTime();
+  const pos=labWater.geometry.attributes.position;
+  for(let i=0;i<pos.count;i++){
+    const x=pos.getX(i),y=pos.getY(i);
+    pos.setZ(i,Math.sin(x*.8+t*1.4)*.045+Math.cos(y*1.2+t)*.025);
+  }
+  pos.needsUpdate=true;labWater.geometry.computeVertexNormals();
+  labDrops.forEach((d,i)=>{
+    if(labMode==="evaporation"||labMode==="cycle"){
+      d.visible=i<58;d.position.y+=.018+(i%4)*.003;
+      if(d.position.y>6.6){d.position.y=-.2;d.position.x=-6+Math.random()*12;}
+    }else if(labMode==="condensation"){
+      d.visible=i<42;d.position.y=5.3+Math.sin(t*1.3+i)*.18;
+      d.position.x=((i%14)-7)*.48+Math.sin(t+i)*.12;
+    }else if(labMode==="rain"){
+      d.visible=i<75;d.position.y-=.09+(i%5)*.012;
+      if(d.position.y<-.3){d.position.y=6+Math.random()*2;d.position.x=-7+Math.random()*14;}
+    }else d.visible=false;
+  });
+  labClouds.forEach((c,i)=>{c.position.x+=Math.sin(t*.25+i)*.0015;c.scale.setScalar(labMode==="condensation"?1.08:1);});
+  labIce.visible=labMode==="melting"||labMode==="freezing";
+  if(labMode==="melting"){labIce.scale.setScalar(Math.max(.18,1-(t%8)/10));}
+  else if(labMode==="freezing"){labIce.scale.setScalar(.85+.05*Math.sin(t*2));}
+  else labIce.scale.setScalar(1);
+  labSun.visible=labMode!=="condensation";
+  labWater.material.color.set(labMode==="rain"?0x168fc9:0x24aee0);
+  labRenderer.render(labScene,labCamera);
+}
+function resizeLab(){
+  if(!labReady)return;const canvas=document.getElementById("lab3d");
+  labCamera.aspect=canvas.clientWidth/canvas.clientHeight;labCamera.updateProjectionMatrix();
+  labRenderer.setSize(canvas.clientWidth,canvas.clientHeight);
+}
+function setLab(mode,button){
+  labMode=mode;document.querySelectorAll(".lab-controls button").forEach(b=>b.classList.remove("selected"));
+  button.classList.add("selected");
+  const descriptions={
+    cycle:"Vòng tuần hoàn nước: Mặt Trời làm nước ở sông, hồ và biển bay hơi. Hơi nước lên cao, lạnh đi và ngưng tụ thành mây. Khi giọt nước đủ lớn, chúng rơi xuống thành mưa rồi trở về sông, hồ.",
+    evaporation:"Bay hơi: Nước ở mặt hồ nhận nhiệt từ Mặt Trời. Một phần nước chuyển thành hơi nước và bay lên không khí. Các hạt xanh đang chuyển động lên trên minh họa hơi nước.",
+    condensation:"Ngưng tụ: Khi hơi nước lên cao và gặp lạnh, hơi nước chuyển thành những giọt nước nhỏ. Nhiều giọt nước tập hợp lại góp phần tạo thành mây.",
+    rain:"Mưa: Những giọt nước trong mây kết hợp, lớn dần và rơi xuống mặt đất. Sau đó nước có thể chảy vào ao, hồ, sông và biển.",
+    melting:"Nóng chảy: Khi nhận nhiệt, nước đá chuyển dần từ thể rắn sang thể lỏng. Khối băng trong mô hình nhỏ dần để minh họa sự nóng chảy.",
+    freezing:"Đông đặc: Khi được làm lạnh đủ mức, nước lỏng chuyển thành nước đá. Mô hình khối băng minh họa trạng thái rắn của nước."
+  };
+  document.getElementById("labInfo").textContent=descriptions[mode];award(1);playSound("success");
+}
+window.addEventListener("resize",resizeLab);
+
+/* HOME 3D SCENE */
+let homeRenderer,homeScene,homeCamera,homeWater,homeReady=false,homeClock=new THREE.Clock();
+function initHome3D(){
+ const canvas=document.getElementById("home3d");
+ if(homeReady||!window.THREE)return;
+ homeReady=true;
+ homeScene=new THREE.Scene();
+ homeCamera=new THREE.PerspectiveCamera(55,canvas.clientWidth/canvas.clientHeight,.1,100);
+ homeCamera.position.set(0,4,16);
+ homeRenderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+ homeRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ homeRenderer.setSize(canvas.clientWidth,canvas.clientHeight);
+ homeScene.add(new THREE.HemisphereLight(0xffffff,0x74b9c9,2));
+ const sunLight=new THREE.DirectionalLight(0xffffff,2);
+ sunLight.position.set(-5,10,8);homeScene.add(sunLight);
+ const sun=new THREE.Mesh(new THREE.SphereGeometry(1.5,32,24),new THREE.MeshBasicMaterial({color:0xffdf76}));
+ sun.position.set(-8,6,-5);homeScene.add(sun);
+ homeWater=new THREE.Mesh(
+  new THREE.PlaneGeometry(60,30,60,40),
+  new THREE.MeshStandardMaterial({color:0x54c7e9,roughness:.3})
+ );
+ homeWater.rotation.x=-Math.PI/2;homeWater.position.set(0,-1.5,-4);homeScene.add(homeWater);
+ for(let i=0;i<5;i++){
+  const cloud=new THREE.Group();
+  const mat=new THREE.MeshStandardMaterial({color:0xffffff});
+  for(let j=0;j<4;j++){
+   const part=new THREE.Mesh(new THREE.SphereGeometry(.7+j%2*.2,16,12),mat);
+   part.position.set(j*.7-.9,Math.sin(j)*.2,0);cloud.add(part);
+  }
+  cloud.position.set(-7+i*4,5+(i%2)*2,-7);
+  homeScene.add(cloud);
+ }
+ animateHome();
+}
+function animateHome(){
+ requestAnimationFrame(animateHome);
+ if(!homeRenderer)return;
+ const t=homeClock.getElapsedTime();
+ homeWater.position.y=-1.5+Math.sin(t)*.04;
+ homeRenderer.render(homeScene,homeCamera);
+}
+window.addEventListener("resize",()=>{
+ if(!homeReady)return;
+ const c=document.getElementById("home3d");
+ homeCamera.aspect=c.clientWidth/c.clientHeight;
+ homeCamera.updateProjectionMatrix();
+ homeRenderer.setSize(c.clientWidth,c.clientHeight);
+});
+
+/* START */
+updateAchievements();
+initHome3D();
+const labObserver=new MutationObserver(()=>{
+ if(document.getElementById("lab").classList.contains("active"))initLab();
+});
+labObserver.observe(document.getElementById("lab"),{attributes:true,attributeFilter:["class"]});
+</script>
+</body>
+</html>
